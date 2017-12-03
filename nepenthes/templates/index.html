@@ -35,8 +35,8 @@ function send_data() {
     processor.connect(context.destination);
 
     processor.onaudioprocess = function(e) {
-      var voice = e.inputBuffer.getChannelData(0);
-      connection.send(voice.buffer); // websocketで送る
+      var audio_data = e.inputBuffer.getChannelData(0);
+      connection.send(audio_data.buffer);
     };
   };
 
