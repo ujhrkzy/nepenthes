@@ -12,3 +12,4 @@ python-engineio
 python-socketio
 gevent
 gevent-websocket
+gunicorn

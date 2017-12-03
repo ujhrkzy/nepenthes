@@ -10,7 +10,7 @@ matcher = AudioPrintMatcher()
 
 
 def _exec():
-    file_names = ["/Users/ujihirokazuya/unirobot/music/nepenthes-master/nepenthes_root/nepenthes/madara-suzu.mp3"]
+    file_names = ["madara-suzu.mp3"]
     messages = list()
 
     def _report(message):

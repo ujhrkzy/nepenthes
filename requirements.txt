@@ -16,6 +16,7 @@ Flask==0.12.2             # via flask-socketio
 gevent-websocket==0.10.1
 gevent==1.2.2
 greenlet==0.4.12          # via gevent
+gunicorn==19.7.1
 itsdangerous==0.24        # via flask
 Jinja2==2.10              # via flask
 joblib==0.11
