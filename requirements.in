@@ -1,0 +1,14 @@
+librosa
+numpy
+scipy
+matplotlib
+docopt
+joblib
+resource
+ConfigParser
+Flask
+Flask-SocketIO
+python-engineio
+python-socketio
+gevent
+gevent-websocket

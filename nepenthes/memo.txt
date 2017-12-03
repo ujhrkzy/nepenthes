@@ -1,0 +1,4 @@
+python3 audfprint.py new --dbase fpdbase.pklz sound/*.mp3
+python3 audfprint.py match --dbase fpdbase.pklz sound/matsumushi.mp3
+
+curl -O http://mushinone.sakura.ne.jp/sound/enma-koorogi.mp3
