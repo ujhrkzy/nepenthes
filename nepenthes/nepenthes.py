@@ -44,7 +44,7 @@ def catch_error(function):
 
 @app.route('/')
 def index():
-    return render_template('websocket_audio_sample.html')
+    return render_template('index.html')
 
 
 @catch_error

@@ -1,0 +1,60 @@
+<html>
+<head>
+  <title>gevent websocket test</title>
+</head>
+<body>
+  <h1>鳴き声検索</h1>
+  <div>
+    <input type="button" value="start" onclick="send_data()" />
+  </div>
+  <div>
+    <textarea id="view"></textarea>
+  </div>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script type="text/javascript">
+function send_data() {
+  var handleSuccess = function(stream) {
+    var context = new AudioContext();
+    var input = context.createMediaStreamSource(stream)
+    var processor = context.createScriptProcessor(1024, 1, 1);
+
+    var connection = new WebSocket('ws://localhost:5000/audios');
+    connection.onmessage = function(e) {
+      $("#view").html($("#view").val() + e.data + "\n");
+    };
+
+    input.connect(processor);
+    processor.connect(context.destination);
+
+    processor.onaudioprocess = function(e) {
+      var voice = e.inputBuffer.getChannelData(0);
+      connection.send(voice.buffer); // websocketで送る
+    };
+  };
+
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(handleSuccess)
+      .catch(function(error) {
+  if (error.name === 'ConstraintNotSatisfiedError') {
+    errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
+        constraints.video.width.exact + ' px is not supported by your device.');
+  } else if (error.name === 'PermissionDeniedError') {
+    errorMsg('Permissions have not been granted to use your camera and ' +
+      'microphone, you need to allow the page access to your devices in ' +
+      'order for the demo to work.');
+  }
+  errorMsg('getUserMedia error: ' + error.name, error);
+});
+
+function errorMsg(msg, error) {
+  errorElement.innerHTML += '<p>' + msg + '</p>';
+  if (typeof error !== 'undefined') {
+    console.error(error);
+  }
+}
+};
+</script>
+</body>
+</html>
+
+
