@@ -20,6 +20,14 @@ from audfprint import audio_read
 
 from scipy import stats
 
+
+class MatchResult(object):
+
+    def __init__(self):
+        self.message_list = list()
+        self.match_file_names = list()
+
+
 def log(message):
     """ log info with stats """
     log_format = "time:{}, physmem:{}, utime:{}, msg:{}"
@@ -353,9 +361,10 @@ class Matcher(object):
             rslts = rslts[(-rslts[:, 2]).argsort(), :]
         return (rslts[:self.max_returns, :], durd, len(q_hashes))
 
-    def file_match_to_msgs(self, analyzer, ht, qry, number=None):
+    def file_match_to_msgs(self, analyzer, ht, qry, number=None) -> MatchResult:
         """ Perform a match on a single input file, return list
             of message strings """
+        match_result = MatchResult()
         rslts, dur, nhash = self.match_file(analyzer, ht, qry, number)
         t_hop = analyzer.n_hop/float(analyzer.target_sr)
         if self.verbose:
@@ -363,14 +372,13 @@ class Matcher(object):
         else:
             qrymsg = qry
 
-        msgrslt = []
         if len(rslts) == 0:
             # No matches returned at all
             nhashaligned = 0
             if self.verbose:
-                msgrslt.append("NOMATCH "+qrymsg)
+                match_result.message_list.append("NOMATCH "+qrymsg)
             else:
-                msgrslt.append(qrymsg+"\t")
+                match_result.message_list.append(qrymsg+"\t")
         else:
             for (tophitid, nhashaligned, aligntime, nhashraw, rank,
                  min_time, max_time) in rslts:
@@ -387,12 +395,13 @@ class Matcher(object):
                     msg += (" with {:5d} of {:5d} common hashes"
                             " at rank {:2d}").format(
                         nhashaligned, nhashraw, rank)
-                    msgrslt.append(msg)
+                    match_result.message_list.append(msg)
                 else:
-                    msgrslt.append(qrymsg + "\t" + ht.names[tophitid])
+                    match_result.message_list.append(qrymsg + "\t" + ht.names[tophitid])
+                match_result.match_file_names.append(ht.names[tophitid])
                 if self.illustrate:
                     self.illustrate_match(analyzer, ht, qry)
-        return msgrslt
+        return match_result
 
     def illustrate_match(self, analyzer, ht, filename):
         """ Show the query fingerprints and the matching ones
