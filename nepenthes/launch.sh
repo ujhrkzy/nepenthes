@@ -7,4 +7,4 @@
 ##################################################################################
 gunicorn -c env/deploy/production/gunicorn.conf.py \
         -k "geventwebsocket.gunicorn.workers.GeventWebSocketWorker" \
-        flask_socket_sample:app
+        nepenthes:app
