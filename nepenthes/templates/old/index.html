@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>鳴き声検索</title>
+</head>
+<body>
+<h1>鳴き声検索</h1>
+<div>
+    <input type="button" value="start" onclick="send_data()"/>
+</div>
+<div>
+    <textarea id="view"></textarea>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+function errorMsg(msg, error) {
+  errorElement.innerHTML += '<p>' + msg + '</p>';
+  if (typeof error !== 'undefined') {
+    console.error(error);
+  }
+};
+
+function send_data() {
+  var handleSuccess = function(stream) {
+    var context = new AudioContext();
+    var input = context.createMediaStreamSource(stream)
+    var processor = context.createScriptProcessor(1024, 1, 1);
+
+    var connection = new WebSocket('ws://localhost:5000/audios');
+    connection.onmessage = function(e) {
+      $("#view").html($("#view").val() + e.data + "\n");
+    };
+
+    input.connect(processor);
+    processor.connect(context.destination);
+
+    processor.onaudioprocess = function(e) {
+      var audio_data = e.inputBuffer.getChannelData(0);
+      connection.send(audio_data.buffer);
+    };
+  };
+
+  var handleError = function(error) {
+    if (error.name === 'PermissionDeniedError') {
+        errorMsg('Permissions have not been granted to use your microphone.', error);
+    } else {
+        errorMsg('getUserMedia error: ' + error.name, error);
+    }
+  };
+
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(handleSuccess)
+      .catch(handleError);
+};
+
+</script>
+</body>
+</html>
+
+

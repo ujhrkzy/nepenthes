@@ -355,6 +355,7 @@ class Matcher(object):
             log_format = "time:{}, Analyzed:{}, name:{}, of {} to {} hashes"
             print(log_format.format(time.ctime(), numberstring, filename, durd, len(q_hashes)))
         # Run query
+        # TODO 実装確認
         rslts = self.match_hashes(ht, q_hashes)
         # Post filtering
         if self.sort_by_time:

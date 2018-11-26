@@ -23,6 +23,7 @@ SAMPLE_WIDTH = 2
 # SAMPLE_RATE = 48000
 SAMPLE_RATE = 44100
 AUDIO_RANGE = 600
+# AUDIO_RANGE = 100
 
 
 class AudioRecognitionService(object):

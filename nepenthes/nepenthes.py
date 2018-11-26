@@ -44,7 +44,29 @@ def catch_error(function):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('start.html')
+
+
+@app.route('/analyze')
+def analyze():
+    return render_template('analyze.html')
+
+
+@app.route('/restart')
+def restart():
+    query_dict = request.args
+    result = query_dict.get("result")
+    return render_template('restart.html', result=result)
+
+
+@app.route('/p')
+def p():
+    return render_template('particle.html')
+
+
+@app.route('/p2')
+def p2():
+    return render_template('particle2.html')
 
 
 @catch_error
@@ -71,5 +93,5 @@ def _main():
 
 
 if __name__ == '__main__':
-    # _main()
-    print("abc")
+     _main()
+    # print("abc")
